@@ -2,7 +2,7 @@
 require_relative "station"
 
 class Route
-  attr_accessor :full_path, :starting_station, :terminal_station
+  attr_reader :starting_station, :terminal_station, :full_path
 # Начальная и конечная станции указываются при создании маршрута,
 # а промежуточные могут добавляться между ними.
   def initialize(starting_station, terminal_station)

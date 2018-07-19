@@ -2,7 +2,7 @@
 require_relative "train"
 
 class Station
-  attr_accessor :name, :trains
+  attr_reader :name, :trains
 
   def initialize(name)
     @name = name
@@ -12,12 +12,12 @@ class Station
 # список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
   def show_trains_by_type(type = :all)
     selected_trains = @trains.select { |train| train.type == type || type == :all }
-    if !selected_trains.empty?
-      selected_trains.each do |train|
-        puts "Поезд: #{train.num}, тип: #{train.type}, кол-во вагонов: #{train.waggonage}"
-      end
-    else
+    if selected_trains.empty?
       puts "На станции #{self.name} нет поездов типа #{type}"
+      return
+    end
+    selected_trains.each do |train|
+      puts "Поезд: #{train.num}, тип: #{train.type}"
     end
   end
 # принимает поезда (по одному за раз)
@@ -30,4 +30,10 @@ class Station
   def departure(train)
     trains.delete(train)
   end
+
+# переменная trains - используется только в методах класса,
+# юзер может посмотреть поезда на станции через show_trains_by_type
+# к массиву trains напрямую доступ юзеру не нужен
+  private
+  attr_reader :trains
 end

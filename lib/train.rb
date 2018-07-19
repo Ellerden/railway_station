@@ -2,16 +2,17 @@
 
 require_relative "route"
 require_relative "station"
+require_relative "passengerwagon"
+require_relative "cargowagon"
+require_relative "wagon"
 
 class Train
-  attr_accessor :speed, :num, :type, :waggonage, :route, :current_stop,
-  :last_stop
+  attr_reader :speed, :num, :wagons, :type, :current_stop, :last_stop
 
-  def initialize(num, type = :pass, waggonage)
+  def initialize(num)
     @num = num
-    @type = type
-    @waggonage = waggonage
     @speed = 0
+    @wagons = []
   end
 # набираeт скорость (по 5 км )
   def accelerate
@@ -21,14 +22,27 @@ class Train
   def stop
     @speed = 0
   end
-
 # отцепляет вагоны (по одному вагону за операцию, если поезд стоит).
-  def detach_car
-    @waggonage -= 1 if @speed == 0 && @waggonage > 0
+  def detach_wagon(wagon)
+    #простой include не работает, потому что подкласс добавляет свои метки
+    # (type :pass например) и полное совпадение не находится
+    @wagons.each do |attached_wagon|
+      if wagon == attached_wagon && @speed == 0
+        @wagons.delete(wagon)
+        return
+      end
+    end
   end
 # прицепляет вагоны (по одному вагону за операцию, если поезд стоит).
-  def attach_car
-    @waggonage += 1 if @speed == 0
+# к пассажирскому поезду цепляются только пассажирские, к грузовому - грузовые. 
+  def attach_wagon(wagon)
+    #простой include не работает, потому что подкласс добавляет свои метки
+    @wagons.each do |attached_wagon|
+      if wagon == attached_wagon
+        return
+      end
+    end
+    @wagons << wagon if @speed == 0 && wagon.type == self.type
   end
 # принимает маршрут следования. При назначении маршрута поезду,
 # поезд автоматически помещается на первую станцию в маршруте.
@@ -75,4 +89,7 @@ class Train
       end
     end
   end
+
+  protected
+  attr_reader :route
 end
