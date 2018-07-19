@@ -5,24 +5,15 @@ class Route
   attr_accessor :full_path, :starting_station, :terminal_station
 # Начальная и конечная станции указываются при создании маршрута,
 # а промежуточные могут добавляться между ними.
-  def initialize(*args)
-    @full_path = []
-    @full_path = args
-    if @full_path.size < 2
+  def initialize(starting_station, terminal_station)
+    if !starting_station.nil? && !terminal_station.nil?
+      @full_path = [starting_station, terminal_station]
+      @starting_station = starting_station
+      @terminal_station = terminal_station
+    else
       abort "Невозможно построить маршрут — нужны начальная и конечная станции"
     end
-    starting_station
-    terminal_station
   end
-
-  def starting_station
-    @starting_station = @full_path.first
-  end
-
-  def terminal_station
-    @starting_station = @full_path.last
-  end
-
 # добавлять промежуточную станцию в список (на предпоследнее место)
   def add_station(station)
     unless @full_path.include? station
@@ -39,6 +30,6 @@ class Route
 # выводит список всех станций по-порядку от начальной до конечной
   def show
     puts "Маршрут следования: "
-    @full_path.map { |station| puts "#{station.name}"}
+    @full_path.each { |station| puts "#{station.name}"}
   end
 end

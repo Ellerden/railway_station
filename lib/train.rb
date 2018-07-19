@@ -7,7 +7,7 @@ class Train
   attr_accessor :speed, :num, :type, :waggonage, :route, :current_stop,
   :last_stop
 
-  def initialize(num, type = "Пассажирский", waggonage)
+  def initialize(num, type = :pass, waggonage)
     @num = num
     @type = type
     @waggonage = waggonage
