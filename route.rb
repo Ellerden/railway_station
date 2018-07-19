@@ -41,5 +41,4 @@ class Route
     puts "Маршрут следования: "
     @full_path.map { |station| puts "#{station.name}"}
   end
-
 end
