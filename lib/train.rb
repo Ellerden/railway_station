@@ -23,15 +23,9 @@ class Train
     @speed = 0
   end
 # отцепляет вагоны (по одному вагону за операцию, если поезд стоит).
-  def detach_wagon(wagon)
-    #простой include не работает, потому что подкласс добавляет свои метки
-    # (type :pass например) и полное совпадение не находится
-    @wagons.each do |attached_wagon|
-      if wagon == attached_wagon && @speed == 0
-        @wagons.delete(wagon)
-        return
-      end
-    end
+# отцепляет последний вагон
+  def detach_wagon
+    @wagons.pop if @wagons.size > 0 && @speed == 0
   end
 # прицепляет вагоны (по одному вагону за операцию, если поезд стоит).
 # к пассажирскому поезду цепляются только пассажирские, к грузовому - грузовые. 
@@ -89,7 +83,9 @@ class Train
       end
     end
   end
-
+# переменная используется только в самом классе и подклассах. человек не знает
+# всего маршрута - только текущую, предыдущую и следующую станции
   protected
   attr_reader :route
+
 end

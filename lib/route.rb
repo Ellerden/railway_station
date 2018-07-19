@@ -29,7 +29,6 @@ class Route
   end
 # выводит список всех станций по-порядку от начальной до конечной
   def show
-    puts "Маршрут следования: "
-    @full_path.each { |station| puts "#{station.name}"}
+    @full_path.each { |station| puts "#{station.name} "}
   end
 end
