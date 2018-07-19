@@ -10,20 +10,15 @@ class Station
   end
 # список всех поездов на станции, находящиеся в текущий момент
 # список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
-  def trains_count(type = :all)
-    result = ["На станции #{self.name} // тип: #{type}"]
-    @trains.select do |train|
-      if (train.type == type) || (type == :all)
-        result << "Номер поезда: #{train.num}, тип: #{train.type}, "\
-        "кол-во вагонов: #{train.waggonage}"
+  def show_trains_by_type(type = :all)
+    selected_trains = @trains.select { |train| train.type == type || type == :all }
+    if !selected_trains.empty?
+      selected_trains.each do |train|
+        puts "Поезд: #{train.num}, тип: #{train.type}, кол-во вагонов: #{train.waggonage}"
       end
+    else
+      puts "На станции #{self.name} нет поездов типа #{type}"
     end
-    # проверка найден ли был хоть один поезд такого типа, если нет - ошибка
-    # c 1, потому что на 0 месте в result инфа о станции
-    unless result.size > 1
-      abort "На станции #{self.name} нет поездов типа #{type}"
-    end
-    result
   end
 # принимает поезда (по одному за раз)
   def arrival(train)

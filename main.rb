@@ -23,8 +23,8 @@ train5.begin_route(route1)
 station1.arrival(train2)
 station1.arrival(train4)
 station1.arrival(train3)
-puts station1.trains_count
-puts station1.trains_count(:cargo)
+station1.show_trains_by_type
+station1.show_trains_by_type(:cargo)
 train1.accelerate
 train1.accelerate
 train1.stop

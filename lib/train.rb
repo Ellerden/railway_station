@@ -17,7 +17,7 @@ class Train
   def accelerate
     @speed += 5
   end
-#тормозить (сбрасывать скорость до нуля)
+#тормозит (сбрасывать скорость до нуля)
   def stop
     @speed = 0
   end
