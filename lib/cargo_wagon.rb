@@ -1,4 +1,5 @@
-require_relative "wagon"
+#encoding: UTF-8
+require_relative 'wagon'
 
 class CargoWagon < Wagon
   def initialize
