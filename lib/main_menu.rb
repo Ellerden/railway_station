@@ -13,24 +13,24 @@ module MainMenu
       case input1
 # Операции со станцией (создать, посмотреть список поездов на станции)"
         when 1
-          puts Station.menu
+          station_menu = StationMenu.new
           input2 = gets.chomp.to_i
-          Station.do_from_menu(input2)
+          station_menu.do_from_menu(input2)
 # Операции с маршрутом (создать, управлять станциями на маршруте и т.д.)
         when 2
-          puts Route.menu
+          route_menu = RouteMenu.new
           input2 = gets.chomp.to_i
-          Route.do_from_menu(input2)
+          route_menu.do_from_menu(input2)
 # Операции с поездом (создать, выбрать маршрут, перемещаться по нему и т.д.)
         when 3
-          puts Train.menu
+          train_menu =TrainMenu.new
           input2 = gets.chomp.to_i
-          Train.do_from_menu(input2)
+          train_menu.do_from_menu(input2)
 # Операции с вагонами (создать, добавить к поезду, отцепить)"
         when 4
-          puts Wagon.menu
+          wagon_menu = WagonMenu.new
           input2 = gets.chomp.to_i
-          Wagon.do_from_menu(input2)
+          wagon_menu.do_from_menu(input2)
         when 0
           break
       end

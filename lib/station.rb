@@ -37,36 +37,6 @@ class Station
   def self.find_station_by_name(name)
     @@stations[name]
   end
-
-  def self.menu
-    "Выберите операцию: 1 - создать станцию, 2 - посмотреть список поездов"\
-    " на станции. 0 - назад"
-  end
-
-  def self.do_from_menu(choice)
-    case choice
-
-      # создать станцию
-      when 1
-        puts 'Введите название станции, которую вы хотите создать'
-        name = gets.chomp
-        @@stations[name] = Station.new(name)
-        puts "Станция #{name} создана"
-
-      # список поездов на станции
-      when 2
-        puts 'Введите название станции, чтобы посмотреть список поездов'
-        name = gets.chomp
-        selected_station = self.find_station_by_name(name)
-        unless selected_station.nil?
-          selected_station.show_trains_by_type
-        end
-
-      when 0
-        MainMenu.show
-    end
-  end
-
 # переменная trains - используется только в методах класса,
 # юзер может посмотреть поезда на станции через show_trains_by_type
 # к массиву trains напрямую доступ юзеру не нужен

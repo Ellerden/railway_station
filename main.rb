@@ -7,6 +7,10 @@ require_relative 'lib/wagon'
 require_relative 'lib/passenger_wagon'
 require_relative 'lib/cargo_wagon'
 require_relative 'lib/main_menu'
+require_relative 'lib/station_menu'
+require_relative 'lib/route_menu'
+require_relative 'lib/train_menu'
+require_relative 'lib/wagon_menu'
 include MainMenu
 
 puts 'Добро пожаловать на железную дорогу. Что вы хотите сделать?'

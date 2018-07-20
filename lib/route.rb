@@ -12,6 +12,7 @@ class Route
       @full_path = [starting_station, terminal_station]
       @starting_station = starting_station
       @terminal_station = terminal_station
+      @@routes << self
     else
       abort "Невозможно построить маршрут — нужны начальная и конечная станции"
     end
@@ -31,7 +32,7 @@ class Route
   end
 # выводит список всех станций по-порядку от начальной до конечной
   def show
-    @full_path.each { |station| puts "#{station.name} "}
+    @full_path.each { |station| puts "#{station.name} " }
   end
 # показывает все созданные маршруты
   def self.show_all
@@ -49,71 +50,15 @@ class Route
     @@routes[index - 1]
   end
 
-  def self.menu
-    "Выберите операцию: 1 - создать маршрут, 2 - добавить станцию, "\
-    "3 - удалить станцию, 4 - посмотреть список всех станций, 0 - назад"
+  protected
+  # показывает последний созданный маршрут. нужно для добавления/удаления станции
+  # из маршрута через меню (class RouteMenu). юзеру не нужен этот метод
+  def self.last
+    @@routes.last
   end
-
-  def self.do_from_menu(choice)
-    case choice
-
-      # 1 - создать маршрут
-      when 1
-        puts "Введите начальную станцию"
-        start = gets.chomp
-        starting_station = Station.find_station_by_name(start)
-        # если такой станции нет, она будет создана
-        unless starting_station.nil?
-          starting_station = Station.new(start)
-        end
-        puts "Введите конечную станцию"
-        finish = gets.chomp
-        terminal_station = Station.find_station_by_name(finish)
-        # если такой станции нет, она будет создана
-        unless terminal_station.nil?
-          terminal_station = Station.new(finish)
-        end
-        @@routes << new(starting_station, terminal_station)
-        puts "Маршрут от #{start} до #{finish} создан"
-
-      # 2 - добавить станцию
-      when 2
-        puts "Введите название станции, которую хотите добавить. "\
-        "Станция будет добавлена в последний созданный маршрут"
-        name = gets.chomp
-        additional_station = Station.find_station_by_name(name)
-        # если такой станции нет, она будет создана
-        unless additional_station.nil?
-          additional_station = Station.new(name)
-          @@routes.last.add_station(additional_station)
-          puts "Станция #{name} добавлена!"
-        end
-
-        # 3 - удалить станцию
-      when 3
-        puts "Введите название станции, которую хотите удалить. "\
-        "Станция будет удалена из последнего созданного маршрута"
-        name = gets.chomp
-
-        odd_station = Station.find_station_by_name(name)
-        unless odd_station.nil?
-          odd_station = Station.new(name)
-          @@routes.last.delete_station(odd_station)
-          puts "На станции #{name} поезд больше не остановится"
-        end
-
-      # 4 - посмотреть список всех станций,
-      when 4
-        puts "Информация о последнем добавленном маршруте:"
-        unless @@routes.empty?
-          @@routes.last.show
-        end
-
-      when 0
-        MainMenu.show
-      end
+  # нужно чтобы знать RouteMenu есть ли какие маршруты показывать или нет
+  # конечному пользователю не нужно
+  def self.empty?
+    @@routes.empty?
   end
-
-  private
-  attr_reader :routes
 end
