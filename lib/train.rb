@@ -5,16 +5,24 @@ require_relative 'passenger_wagon'
 require_relative 'cargo_wagon'
 require_relative 'wagon'
 require_relative 'main_menu'
+require_relative 'manufacturer'
+require_relative 'instance_counter'
+include InstanceCounter
+include Manufacturer
 
 class Train
   attr_reader :speed, :num, :wagons, :type, :current_stop
   @@trains = {}
 
-  def initialize(num)
+  def initialize(num, train_manufacturer = nil)
     @num = num
     @speed = 0
     @wagons = []
     @@trains[num] = self
+    register_instance
+    unless train_manufacturer.nil?
+      self.company_name = train_manufacturer
+    end
   end
 # набираeт скорость (по 5 км )
   def accelerate
@@ -71,8 +79,8 @@ class Train
       last_before(@current_stop)
     end
   end
-
-  def self.find_train_by_name(name)
+ # поиска поезда по имени
+  def self.find(name)
     @@trains[name]
   end
 

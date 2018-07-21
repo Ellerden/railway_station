@@ -1,6 +1,8 @@
 # encoding: UTF-8
 require_relative 'station'
 require_relative 'main_menu'
+require_relative 'instance_counter'
+include InstanceCounter
 
 class Route
   attr_reader :starting_station, :terminal_station, :full_path
@@ -13,6 +15,7 @@ class Route
       @starting_station = starting_station
       @terminal_station = terminal_station
       @@routes << self
+      register_instance
     else
       abort "Невозможно построить маршрут — нужны начальная и конечная станции"
     end

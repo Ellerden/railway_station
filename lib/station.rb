@@ -1,6 +1,8 @@
 # encoding: UTF-8
 require_relative 'train'
 require_relative 'main_menu'
+require_relative 'instance_counter'
+include InstanceCounter
 
 class Station
   attr_reader :name, :trains
@@ -10,6 +12,7 @@ class Station
     @name = name
     @trains = []
     @@stations[name] = self
+    register_instance
   end
 # список всех поездов на станции, находящиеся в текущий момент
 # список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
@@ -32,6 +35,10 @@ class Station
 # отправляет поезда (по одному за раз. поезд удаляется из списка поездов)
   def departure(train)
     trains.delete(train)
+  end
+  # показывает все созданные станции
+  def self.all
+    @@stations.keys unless @@stations.nil?
   end
 
   def self.find_station_by_name(name)

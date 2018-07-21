@@ -52,7 +52,7 @@ class TrainMenu
   def choose_route
     puts 'Какой поезд вы хотите поставить на маршрут? Введите название'
     name = gets.chomp
-    selected_train = Train.find_train_by_name(name)
+    selected_train = Train.find(name)
     unless selected_train.nil? || Route.empty?
       puts 'Выберите один из маршрутов: '
       Route.show_all
@@ -66,7 +66,7 @@ class TrainMenu
   def forward_on_route
     puts 'Какой поезд вы хотите продвинуть вперед? Введите название'
     name = gets.chomp
-    selected_train = Train.find_train_by_name(name)
+    selected_train = Train.find(name)
 
     unless selected_train.nil? || selected_train.current_stop.nil?
       puts "Следующая станция — #{selected_train.next_stop.name}"
@@ -78,7 +78,7 @@ class TrainMenu
   def backward_on_route
     puts 'Какой поезд вы хотите отправить назад? Введите название'
     name = gets.chomp
-    selected_train = Train.find_train_by_name(name)
+    selected_train = Train.find(name)
 
     unless selected_train.nil? || selected_train.current_stop.nil?
       puts "Предыдущая станция — #{selected_train.last_stop.name}"

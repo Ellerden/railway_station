@@ -6,7 +6,7 @@ require_relative 'station'
 class StationMenu
   def initialize
     puts 'Выберите операцию: 1 - создать станцию, 2 - посмотреть список поездов'\
-    ' на станции. 0 - назад'
+    ' на станции. 3 - посмотреть список всех станций. 0 - назад'
   end
 
   def do_from_menu(choice)
@@ -15,6 +15,8 @@ class StationMenu
     when 1 then create_station
       # список поездов на станции
     when 2 then show_trains_on_station
+      # показать все существующие станции
+    when 3 then show_all_stations
       # возврат в главное меню
     when 0 then return
     end
@@ -36,5 +38,10 @@ class StationMenu
     unless selected_station.nil?
       selected_station.show_trains_by_type
     end
+  end
+
+  def show_all_stations
+    puts 'Список всех существующих ж/д станций:'
+    puts Station.all
   end
 end

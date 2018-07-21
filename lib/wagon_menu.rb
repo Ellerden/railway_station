@@ -21,17 +21,23 @@ class WagonMenu
     when 0 then return
     end
   end
-
+# к этим методам есть доступ только через do_from_menu,
+# используются внутри клаccа
   private
   def create_wagon
     puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
     type = gets.chomp.to_i
-    if type == 1
-    PassengerWagon.new
+    puts 'Введите название фирмы-производителя вагонов'
+    name = gest.chomp
+    case type
+    when 1
+      PassengerWagon.new(name)
       puts 'Пассажирский вагон создан'
-    elsif type == 2
-      CargoWagon.new
+    when 2
+      CargoWagon.new(name)
       puts 'Грузовой вагон создан'
+    else
+      puts 'Такие вагоны мы пока делать не умеем'
     end
   end
 
