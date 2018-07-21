@@ -12,42 +12,49 @@ class WagonMenu
   def do_from_menu(choice)
     case choice
       # создать вагон
-    when 1
-      puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
-      type = gets.chomp.to_i
-      if type == 1
-        PassengerWagon.new
-        puts 'Пассажирский вагон создан'
-      elsif type == 2
-        CargoWagon.new
-        puts 'Грузовой вагон создан'
-      end
-
+    when 1 then create_wagon
       # добавить вагон к поезду
-    when 2
-      puts 'Введите название поезда, к которому цеплять вагон. '\
-        ' К поезду будет прицеплен последний созданный вагон'
-      name = gets.chomp
-      selected_train = Train.find_train_by_name(name)
-      unless selected_train.nil?
-        last_wagon = Wagon.last
-        selected_train.attach_wagon(last_wagon)
-        puts 'Вагон прицеплен'
-      end
-
+    when 2 then attach_wagon_to_train
       # отцепить вагон от поезда
-    when 3
-      puts 'Введите название поезда, от которого отцеплять вагон. '\
-      'Будет отцеплен последний вагон в поезде'
-      name = gets.chomp
-      selected_train = Train.find_train_by_name(name)
-      unless selected_train.nil?
-        selected_train.detach_wagon
-        puts 'Вагон отцеплен'
-      end
+    when 3 then detach_wagon_from_train
       # возвращаемся в главное меню ж/д станции
-    when 0
-      MainMenu.show
+    when 0 then return
+    end
+  end
+
+  private
+  def create_wagon
+    puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
+    type = gets.chomp.to_i
+    if type == 1
+    PassengerWagon.new
+      puts 'Пассажирский вагон создан'
+    elsif type == 2
+      CargoWagon.new
+      puts 'Грузовой вагон создан'
+    end
+  end
+
+  def attach_wagon_to_train
+    puts 'Введите название поезда, к которому цеплять вагон. '\
+    ' К поезду будет прицеплен последний созданный вагон'
+    name = gets.chomp
+    selected_train = Train.find_train_by_name(name)
+    unless selected_train.nil?
+      last_wagon = Wagon.last
+      selected_train.attach_wagon(last_wagon)
+      puts 'Вагон прицеплен'
+    end
+  end
+
+  def detach_wagon_from_train
+    puts 'Введите название поезда, от которого отцеплять вагон. '\
+    'Будет отцеплен последний вагон в поезде'
+    name = gets.chomp
+    selected_train = Train.find_train_by_name(name)
+    unless selected_train.nil?
+      selected_train.detach_wagon
+      puts 'Вагон отцеплен'
     end
   end
 end
