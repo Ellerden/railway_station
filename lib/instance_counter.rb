@@ -9,6 +9,7 @@ module InstanceCounter
   module ClassMethods
     # возвращает кол-во экземпляров данного класса
     def instances
+      @count = 0 if @count.nil?
       @count
     end
   end
