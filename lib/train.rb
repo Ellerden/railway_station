@@ -20,9 +20,7 @@ class Train
     @wagons = []
     @@trains[num] = self
     register_instance
-    unless train_manufacturer.nil?
-      self.company_name = train_manufacturer
-    end
+    self.company_name = train_manufacturer
   end
 # набираeт скорость (по 5 км )
   def accelerate
@@ -69,12 +67,14 @@ class Train
 
 # следующая остановка, остальные вызываются без метода – last_stop, current_stop
   def next_stop
+    # если маршрутов нет, поезд еще не вышел на маршрут или стоит на последней станции
     unless @route == "" || @current_stop.nil? || @current_stop == @route.terminal_station
       next_after(@current_stop)
     end
   end
 
   def last_stop
+    # если маршрутов нет, поезд еще не вышел на маршрут или стоит на 1-й станции
     unless @route == "" || @current_stop.nil? || @current_stop == @route.starting_station
       last_before(@current_stop)
     end

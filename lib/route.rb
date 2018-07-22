@@ -39,13 +39,11 @@ class Route
   end
 # показывает все созданные маршруты
   def self.show_all
-    unless @@routes.nil?
-      @@routes.each_with_index do |route, index|
-        puts "№ #{index + 1}"
-        puts "................"
-        route.show
-        puts "................"
-      end
+    @@routes.each_with_index do |route, index|
+      puts "№ #{index + 1}"
+      puts "................"
+      route.show
+      puts "................"
     end
   end
 

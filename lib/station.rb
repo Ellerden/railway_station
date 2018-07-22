@@ -38,7 +38,7 @@ class Station
   end
   # показывает все созданные станции
   def self.all
-    @@stations.keys unless @@stations.nil?
+    @@stations.keys
   end
 
   def self.find_station_by_name(name)
