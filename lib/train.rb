@@ -115,7 +115,7 @@ class Train
   end
 
   def valid?
-    !@num.match(/[\D\d]{3}-?[\D\d]{2}/i).nil?
+    !@num.match(/^[[:alpha:]\d]{3}-?[[:alpha:]\d]{2}$/iu).nil?
   end
 
   private
