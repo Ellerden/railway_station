@@ -19,12 +19,12 @@ class Wagon
 
   def validate!
     unless valid?
-      raise 'Не задано или слишком короткое название фирмы-производителя'
+      raise 'Слишком короткое название фирмы-производителя'
     end
   end
 
   def valid?
-    unless company_name.nil? || company_name.size < 2
+    unless company_name.size < 2
       return true
     end
       false

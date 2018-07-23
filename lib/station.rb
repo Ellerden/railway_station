@@ -58,7 +58,7 @@ class Station
   end
 
   def valid?
-    unless @name.nil? || @name.size < 2
+    unless @name.size < 2
       return true
     end
       false
