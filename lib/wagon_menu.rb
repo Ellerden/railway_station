@@ -28,7 +28,7 @@ class WagonMenu
     puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
     type = gets.chomp.to_i
     puts 'Введите название фирмы-производителя вагонов'
-    name = gest.chomp
+    name = gets.chomp
     case type
     when 1
       PassengerWagon.new(name)

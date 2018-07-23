@@ -1,28 +1,29 @@
 # encoding: UTF-8
-module InstanceCounter
 
+# модуль подсчета созданных объектов класса
+module InstanceCounter
   def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
 
   module ClassMethods
+    attr_accessor :count
     # возвращает кол-во экземпляров данного класса
     def instances
-      @count = 0 if @count.nil?
+      @count ||= 0
       @count
     end
   end
 
-  protected
   module InstanceMethods
-    attr_accessor :count
+    protected
+
+   # attr_accessor :count
     # увеличивает счетчик кол-ва экземпляров класса
     def register_instance
-      self.class.count = 0 if self.class.count.nil?
+      self.class.count ||= 0
       self.class.count += 1
     end
   end
 end
-
-

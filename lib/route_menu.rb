@@ -1,12 +1,13 @@
 # encoding: UTF-8
+
 require_relative 'station'
 require_relative 'main_menu'
 require_relative 'route'
-
+# Интерфейс меню для управления маршрутами
 class RouteMenu
   def initialize
-    puts "Выберите операцию: 1 - создать маршрут, 2 - добавить станцию, "\
-    "3 - удалить станцию, 4 - посмотреть список всех станций, 0 - назад"
+    puts 'Выберите операцию: 1 - создать маршрут, 2 - добавить станцию, '\
+    '3 - удалить станцию, 4 - посмотреть список всех станций, 0 - назад'
   end
 
   def do_from_menu(choice)
@@ -27,6 +28,7 @@ class RouteMenu
 # к этим методам есть доступ только через do_from_menu,
 # используются внутри клаccа
   private
+
   def create_route
     puts 'Введите начальную станцию (станция должна быть создана)'
     start = gets.chomp
@@ -69,7 +71,7 @@ class RouteMenu
     puts 'Информация о последнем добавленном маршруте:'
     unless Route.empty?
       last_route = Route.last
-      last_route.show
+      puts last_route.all_stations
     end
   end
 end

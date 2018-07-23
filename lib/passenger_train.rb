@@ -1,6 +1,7 @@
-#encoding: UTF-8
-require_relative 'train'
+# encoding: UTF-8
 
+require_relative 'train'
+# Создание и управление пассажирскими поездами
 class PassengerTrain < Train
   def initialize(num)
     @type = :pass
