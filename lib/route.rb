@@ -22,13 +22,16 @@ class Route
 
 # добавлять промежуточную станцию в список (на предпоследнее место)
   def add_station(station)
-    @full_path.insert(-2, station) unless @full_path.include? station
+    unless station_valid?(station) && @full_path.include?(station)
+      @full_path.insert(-2, station)
+    end
   end
 
 # удаляет промежуточную станцию из списка
   def delete_station(station)
-# проверяем, является ли станция промежуточной. если да - удаляем
-    unless station == @starting_station || station == @terminal_station
+    # проверяем, является ли станция промежуточной и вообще станцией. если да - удаляем
+    unless station_valid?(station) && (station == @starting_station ||
+      station == @terminal_station)
       @full_path.delete(station)
     end
   end
@@ -50,22 +53,29 @@ class Route
     @@routes[index - 1]
   end
 
+  def valid?
+    begin
+      validate!
+      result = true
+    rescue RuntimeError => e
+      puts 'Что-то пошло не так. Ошибка: #{e.inspect} '
+      result = false
+    end
+  end
+
   protected
 
   def validate!
-    unless valid?
+    if !station_valid?(@starting_station) || !station_valid?(@terminal_station)
       raise 'Неверно заданы начальная или конечная станции. Проверьте список'\
         ' существующих станций'
     end
   end
 
-  def valid?
-    unless Station.find_station_by_name(@starting_station.name).nil? ||
-      Station.find_station_by_name(@terminal_station.name).nil?
-      return true
-    end
-      false
+  def station_valid?(station)
+    !Station.find_station_by_name(station.name).nil?
   end
+
 
   # показывает последний созданный маршрут. нужно для добавления/удаления станции
   # из маршрута через меню (class RouteMenu). юзеру не нужен этот метод

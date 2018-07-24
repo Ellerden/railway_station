@@ -30,16 +30,17 @@ class RouteMenu
   private
 
   def create_route
-    puts 'Введите начальную станцию (станция должна быть создана)'
-    start = gets.chomp
-    starting_station = Station.find_station_by_name(start)
-    puts 'Введите конечную станцию (станция должна быть создана)'
-    finish = gets.chomp
-    terminal_station = Station.find_station_by_name(finish)
-    unless terminal_station.nil? && starting_station.nil?
-      new_route = Route.new(starting_station, terminal_station)
-      puts "Маршрут от #{new_route.starting_station.name} до "\
-      "#{new_route.terminal_station.name} создан"
+    begin
+      puts 'Введите начальную станцию (станция должна быть создана)'
+      start = gets.chomp
+      puts 'Введите конечную станцию (станция должна быть создана)'
+
+      finish = gets.chomp
+      new_route = Route.new(start, finish)
+    rescue
+      puts "Вагон #{wagon.company_name} типа #{wagon.type} создан!" if wagon.valid?
+    else
+
     end
   end
 
@@ -47,11 +48,9 @@ class RouteMenu
     puts 'Введите название станции, которую хотите добавить. Станция (должна '\
     'быть создана до этого) будет добавлена в последний созданный маршрут.'
     name = gets.chomp
-    additional_station = Station.find_station_by_name(name)
-    unless additional_station.nil?
+    unless Route.empty?
       last_route = Route.last
       last_route.add_station(additional_station)
-      puts "Станция #{additional_station.name} добавлена!"
     end
   end
 
@@ -59,11 +58,9 @@ class RouteMenu
     puts 'Введите название станции, которую хотите удалить. Станция (должна '\
     'быть создана до этого) будет удалена из последнего созданного маршрута'
     name = gets.chomp
-    odd_station = Station.find_station_by_name(name)
-    unless odd_station.nil?
+    unless Route.empty?
       last_route = Route.last
       last_route.delete_station(odd_station)
-      puts "На станции #{odd_station.name} поезд больше не остановится"
     end
   end
 

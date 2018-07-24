@@ -13,7 +13,8 @@ require_relative 'instance_counter'
 class Train
   include Manufacturer
   include InstanceCounter
-
+  # можно создать только объекты субкласса PassengerTrain или CargoTrain
+  private_class_method :new
   attr_reader :speed, :num, :wagons, :type, :current_stop
   @@trains = {}
 
@@ -21,10 +22,9 @@ class Train
     @num = num
     @speed = 0
     @wagons = []
-    validate!
-    @@trains[num] = self
-    register_instance
     self.company_name = train_manufacturer
+    validate!
+    register_instance
   end
 
   # набираeт скорость (по 5 км )
@@ -51,12 +51,14 @@ class Train
       return if wagon == attached_wagon
     end
     @wagons << wagon if @speed.zero? && wagon.type == type
+    # валидируем вагоны - вдруг это не вагоны
   end
 
 # принимает маршрут следования. При назначении маршрута поезду,
 # поезд автоматически помещается на первую станцию в маршруте.
   def begin_route(route)
     @route = route
+    # валидируем маршрут - вдруг это не маршрут
     route.starting_station.arrival(self)
     @current_stop = route.starting_station
   end
@@ -97,6 +99,16 @@ class Train
 # переменная используется только в самом классе и подклассах. человек не знает
 # всего маршрута - только текущую, предыдущую и следующую станции
 
+  def valid?
+    begin
+      validate!
+      true
+    rescue RuntimeError => e
+      puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
+      false
+    end
+  end
+
   protected
 
   attr_reader :route
@@ -107,16 +119,34 @@ class Train
   def validate!
     # regexp формат: 3 буквы или цифры в любом порядке, необязательный дефис
     # и еще 2 буквы или цифры после дефиса
-    if !valid?
+    if @num.match(/^[[:alpha:]\d]{3}-?[[:alpha:]\d]{2}$/i).nil?
       raise 'Номер поезда задан неверно. Формат: 3 буквы/цифры(-)2 буквы/цифры'
-    else
-      puts "Поезд #{@num} типа #{@type} успешно создан!"
+    elsif !wagons_valid?
+      raise 'К поезду прикреплены вагоны неверного типа'
+    elsif !route_valid?
+      raise 'Маршрут задан неверно'
+    elsif !type_valid?
+      raise 'Неверно задан тип поезда. Поезда 2х типов - пасс/груз'
     end
   end
 
-  def valid?
-    !@num.match(/^[[:alpha:]\d]{3}-?[[:alpha:]\d]{2}$/iu).nil?
+  def wagons_valid?
+    selected_wagons = @wagons.select { |wagon| wagon.type == :pass }
+    result = selected_wagons.size == @wagons.size ? true : false
   end
+
+  def route_valid?
+    unless @route.nil?
+      result = @route.is_a?(Route) ? true : false
+      return result
+    end
+    true
+  end
+
+  def type_valid?
+    result = (@type == :pass || @type == :cargo) ? true : false
+  end
+
 
   private
 

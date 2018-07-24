@@ -16,14 +16,7 @@ class TrainMenu
   def do_from_menu(choice)
     case choice
     # создать поезд
-    when 1
-      begin
-        create_train
-      rescue RuntimeError => e
-        puts "Что-то пошло не так :( #{e.inspect}"
-        puts 'Введите номер поезда согласно формату'
-        retry
-      end
+    when 1 then create_train
     # выбрать маршрут
     when 2 then choose_route
     # вперед по маршруту
@@ -39,15 +32,21 @@ class TrainMenu
 # используются внутри клаccа
   private
   def create_train
-    puts 'Выберите тип поезда, который вы хотите создать: 1 - пасс, 2 - груз.'
-    type = gets.chomp.to_i
-    puts 'Введите название поезда, который вы хотите создать'
-    name = gets.chomp
-    case type
-    when 1 then train = PassengerTrain.new(name)
-    when 2 then train = CargoTrain.new(name)
-    else
-      puts 'Таких поездов мы пока не делаем'
+    begin
+      puts 'Выберите тип поезда, который вы хотите создать: 1 - пасс, 2 - груз.'
+      type = gets.chomp.to_i
+      puts 'Введите название поезда, который вы хотите создать'
+      name = gets.chomp
+      case type
+      when 1 then train = PassengerTrain.new(name)
+      when 2 then train = CargoTrain.new(name)
+      else
+        raise 'Неверно задан тип поезда. Повторите ввод'
+      end
+      puts "Поезд #{train.num} типа #{train.type} создан!" if train.valid?
+    rescue RuntimeError => e
+      puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
+      retry
     end
   end
 
@@ -64,7 +63,7 @@ class TrainMenu
     unless choice.zero? || choice > size
       selected_route = Route.by_index(choice)
       selected_train.begin_route(selected_route)
-      puts "Поезд вышел на маршрут! #{choice}"
+      puts "Поезд вышел на маршрут № #{choice}!"
     end
   end
 
@@ -72,7 +71,6 @@ class TrainMenu
     puts 'Какой поезд вы хотите продвинуть вперед? Введите название'
     name = gets.chomp
     selected_train = Train.find(name)
-
     unless selected_train.nil? || selected_train.current_stop.nil?
       puts "Следующая станция — #{selected_train.next_stop.name}"
       selected_train.forward

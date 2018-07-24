@@ -25,19 +25,22 @@ class WagonMenu
 # используются внутри клаccа
   private
   def create_wagon
-    puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
-    type = gets.chomp.to_i
-    puts 'Введите название фирмы-производителя вагонов'
-    name = gets.chomp
-    case type
-    when 1
-      PassengerWagon.new(name)
-      puts 'Пассажирский вагон создан'
-    when 2
-      CargoWagon.new(name)
-      puts 'Грузовой вагон создан'
-    else
-      puts 'Такие вагоны мы пока делать не умеем'
+    begin
+      puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
+      type = gets.chomp.to_i
+      puts 'Введите название фирмы-производителя вагонов'
+      name = gets.chomp
+      case type
+      when 1
+      wagon = PassengerWagon.new(name)
+      when 2
+      wagon = CargoWagon.new(name)
+      else
+        raise 'Неверно задан тип вагона. Выберите тип пасс или груз'
+      end
+      puts "Вагон #{wagon.company_name} типа #{wagon.type} создан!" if wagon.valid?
+    rescue RuntimeError
+      retry
     end
   end
 

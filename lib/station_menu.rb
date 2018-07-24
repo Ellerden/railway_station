@@ -28,10 +28,15 @@ class StationMenu
   private
 
   def create_station
-    puts 'Введите название станции, которую вы хотите создать'
-    name = gets.chomp
-    station = Station.new(name)
-    puts "Станция #{station.name} создана"
+    begin
+      puts 'Введите название станции, которую вы хотите создать'
+      name = gets.chomp
+      station = Station.new(name)
+      puts "Станция #{station.name} создана" if station.valid?
+    rescue RuntimeError => e
+      puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
+      retry
+    end
   end
 
   def show_trains_on_station

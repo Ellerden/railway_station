@@ -23,11 +23,6 @@ class Station
       .map { |train| "Поезд: #{train.num}, тип: #{train.type}" }
   end
 
-    #if selected_trains.empty?
-    #  puts "На станции #{name} нет поездов типа #{type}"
-    #  return
-   # end
-
   # принимает поезда (по одному за раз)
   def arrival(train)
     unless trains.include? train
@@ -49,19 +44,22 @@ class Station
     @@stations[name]
   end
 
-  protected
-
-  def validate!
-    unless valid?
-      raise 'Неверно задано имя станции. Имя не может быть короче 1 символа'
+  def valid?
+    begin
+      validate!
+      true
+    rescue RuntimeError => e
+      puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
+      false
     end
   end
 
-  def valid?
-    unless @name.size < 2
-      return true
+  protected
+
+  def validate!
+    if @name.size < 2
+      raise 'Неверно задано имя станции. Имя не может быть короче 1 символа'
     end
-      false
   end
 
   # переменная trains - используется только в методах класса,

@@ -7,27 +7,33 @@ require_relative 'manufacturer'
 class Wagon
   include Manufacturer
   attr_reader :type
+  # можно создать только объект субкласса PassengerWagon или CargoWagon
+  private_class_method :new
   @@all_wagons = []
 
   def initialize(manufacturer)
     self.company_name = manufacturer
     validate!
-    @@all_wagons << self
+  end
+
+  def valid?
+    begin
+      validate!
+      result = true
+    rescue RuntimeError => e
+      puts 'Что-то пошло не так. Ошибка: #{e.inspect} '
+      result = false
+    end
   end
 
   protected
 
   def validate!
-    unless valid?
+    if company_name.size < 2
       raise 'Слишком короткое название фирмы-производителя'
+    elsif (@type != :pass || @type != :cargo)
+      raise 'Неверно задан тип вагона'
     end
-  end
-
-  def valid?
-    unless company_name.size < 2
-      return true
-    end
-      false
   end
 
   # показывает последний созданный вагон. нужно для добавления вагонов к поезду
