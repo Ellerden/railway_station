@@ -29,11 +29,8 @@ class Wagon
   protected
 
   def validate!
-    if company_name.size < 2
-      raise 'Слишком короткое название фирмы-производителя'
-    elsif (@type != :pass || @type != :cargo)
-      raise 'Неверно задан тип вагона'
-    end
+    raise 'Слишком короткое название производителя' if company_name.size < 2
+    raise 'Неверно задан тип вагона' unless (@type == :pass || @type == :cargo)
   end
 
   # показывает последний созданный вагон. нужно для добавления вагонов к поезду

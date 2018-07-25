@@ -57,9 +57,7 @@ class Station
   protected
 
   def validate!
-    if @name.size < 2
-      raise 'Неверно задано имя станции. Имя не может быть короче 1 символа'
-    end
+    raise 'Неверное имя станции – короче 1 символа' if @name.size < 2
   end
 
   # переменная trains - используется только в методах класса,

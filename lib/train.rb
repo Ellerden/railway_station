@@ -120,33 +120,28 @@ class Train
     # regexp формат: 3 буквы или цифры в любом порядке, необязательный дефис
     # и еще 2 буквы или цифры после дефиса
     if @num.match(/^[[:alpha:]\d]{3}-?[[:alpha:]\d]{2}$/i).nil?
-      raise 'Номер поезда задан неверно. Формат: 3 буквы/цифры(-)2 буквы/цифры'
-    elsif !wagons_valid?
-      raise 'К поезду прикреплены вагоны неверного типа'
-    elsif !route_valid?
-      raise 'Маршрут задан неверно'
-    elsif !type_valid?
-      raise 'Неверно задан тип поезда. Поезда 2х типов - пасс/груз'
+      raise 'Неверно задан № поезда. Формат: 3 буквы/цифры(-)2 буквы/цифры'
     end
+    raise 'К поезду прикреплены вагоны неверного типа' unless wagons_valid?
+    raise 'Маршрут задан неверно' unless route_valid?
+    raise 'Неверно задан тип поезда. Нужно - пасс/груз' unless type_valid?
   end
 
   def wagons_valid?
     selected_wagons = @wagons.select { |wagon| wagon.type == :pass }
-    result = selected_wagons.size == @wagons.size ? true : false
+    return true if selected_wagons.size == @wagons.size
+    false
   end
 
   def route_valid?
-    unless @route.nil?
-      result = @route.is_a?(Route) ? true : false
-      return result
-    end
-    true
+    return true unless @route
+    @route.is_a?(Route)
   end
 
   def type_valid?
-    result = (@type == :pass || @type == :cargo) ? true : false
+    return true if @type == :pass || @type == :cargo
+    false
   end
-
 
   private
 

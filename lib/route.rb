@@ -66,14 +66,17 @@ class Route
   protected
 
   def validate!
-    if !station_valid?(@starting_station) || !station_valid?(@terminal_station)
-      raise 'Неверно заданы начальная или конечная станции. Проверьте список'\
-        ' существующих станций'
+    unless station_valid?(@starting_station)
+      raise 'Неверно задана начальная станция. Проверьте список станций'
+    end
+    unless station_valid?(@terminal_station)
+      raise 'Неверно задана конечная станция. Проверьте список станций'
     end
   end
 
   def station_valid?(station)
-    !Station.find_station_by_name(station.name).nil?
+    return true unless Station.find_station_by_name(station.name).nil?
+    false
   end
 
 
