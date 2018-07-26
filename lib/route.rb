@@ -75,8 +75,8 @@ class Route
   end
 
   def station_valid?(station)
-    return true unless Station.find_station_by_name(station.name).nil?
-    false
+    return false if Station.find_station_by_name(station.name).nil?
+    true
   end
 
 
