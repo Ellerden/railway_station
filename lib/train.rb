@@ -8,11 +8,13 @@ require_relative 'wagon'
 require_relative 'main_menu'
 require_relative 'manufacturer'
 require_relative 'instance_counter'
+require_relative 'wagons_info'
 
 # создание и упраление поездов
 class Train
   include Manufacturer
   include InstanceCounter
+  include WagonsInfo
   # можно создать только объекты субкласса PassengerTrain или CargoTrain
   private_class_method :new
   attr_reader :speed, :num, :wagons, :type, :current_stop
@@ -35,6 +37,13 @@ class Train
   # тормозит (сбрасывать скорость до нуля)
   def stop
     @speed = 0
+  end
+
+  #метод, который принимает блок и проходит по всем вагонам поезда
+  #(вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
+
+  def show_all_wagons(&block)
+    @wagons.each { |wagon| block.call(wagon, @wagons.index(wagon) + 1) }
   end
 
   # отцепляет вагоны (по одному вагону за операцию, если поезд стоит).

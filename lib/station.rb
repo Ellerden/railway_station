@@ -44,6 +44,10 @@ class Station
     @@stations[name]
   end
 
+  def show_all_trains(&block)
+    @trains.each { |train| block.call(train) }
+  end
+
   def valid?
     begin
       validate!

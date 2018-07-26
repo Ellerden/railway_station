@@ -32,14 +32,19 @@ class WagonMenu
       name = gets.chomp
       case type
       when 1
-      wagon = PassengerWagon.new(name)
+        puts 'Введите количество мест в вагоне'
+        places = gets.chomp.to_i
+        wagon = PassengerWagon.new(name, places)
       when 2
-      wagon = CargoWagon.new(name)
+        puts 'Введите общий объем вагона (м^3)'
+        capacity = gets.chomp.to_i
+        wagon = CargoWagon.new(name, capacity)
       else
-        raise 'Неверно задан тип вагона. Выберите тип пасс или груз'
+        raise 'Неверно задан тип вагона. Повторите ввод.'
       end
       puts "Вагон #{wagon.company_name} типа #{wagon.type} создан!" if wagon.valid?
-    rescue RuntimeError
+    rescue RuntimeError => e
+      puts "Что-то пошло не так. Ошибка: #{e.inspect}"
       retry
     end
   end
@@ -48,9 +53,9 @@ class WagonMenu
     puts 'Введите название поезда, к которому цеплять вагон. '\
     ' К поезду будет прицеплен последний созданный вагон'
     name = gets.chomp
-    selected_train = Train.find_train_by_name(name)
-    unless selected_train.nil?
-      last_wagon = Wagon.last
+    selected_train = Train.find(name)
+    last_wagon = Wagon.last
+    if selected_train && selected_train.type == last_wagon.type
       selected_train.attach_wagon(last_wagon)
       puts 'Вагон прицеплен'
     end
@@ -60,8 +65,8 @@ class WagonMenu
     puts 'Введите название поезда, от которого отцеплять вагон. '\
     'Будет отцеплен последний вагон в поезде'
     name = gets.chomp
-    selected_train = Train.find_train_by_name(name)
-    unless selected_train.nil?
+    selected_train = Train.find(name)
+    if selected_train && selected_train.wagons
       selected_train.detach_wagon
       puts 'Вагон отцеплен'
     end

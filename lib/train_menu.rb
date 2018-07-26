@@ -5,12 +5,16 @@ require_relative 'passenger_wagon'
 require_relative 'cargo_wagon'
 require_relative 'wagon'
 require_relative 'main_menu'
+require_relative 'wagons_info'
 require_relative 'train'
 
 class TrainMenu
+  include WagonsInfo
+
   def initialize
     puts 'Выберите операцию: 1 - создать поезд, 2 - выбрать маршрут поезда, '\
-    '3 - вперед по маршруту, 4 - назад по маршруту. 0 - назад'
+    '3 - вперед по маршруту, 4 - назад по маршруту, 5 - информация о вагонах. '\
+    '0 - назад'
   end
 
   def do_from_menu(choice)
@@ -23,6 +27,8 @@ class TrainMenu
     when 3 then forward_on_route
     # назад по маршруту
     when 4 then backward_on_route
+    # управлять вагонами
+    when 5 then manage_wagons
     # назад к главному меню
     when 0 then return
     end
@@ -88,5 +94,12 @@ class TrainMenu
       selected_train.backward
       puts 'Поезд отправился назад'
     end
+  end
+
+  def manage_wagons
+    puts 'Информацию о вагонах какого поезда вы хотите увидеть? Введите название'
+    name = gets.chomp
+    selected_train = Train.find(name)
+    selected_train.show_wagons_info if selected_train && selected_train.wagons
   end
 end

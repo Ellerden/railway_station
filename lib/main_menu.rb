@@ -8,6 +8,7 @@ module MainMenu
       puts '2 - Операции с маршрутом (создать, управлять станциями на маршруте и т.д.)'
       puts '3 - Операции с поездом (создать, выбрать маршрут, перемещаться по нему и т.д.)'
       puts '4 - Операции с вагонами (создать, добавить к поезду, отцепить)'
+      puts '5 - Операции с билетами и грузами'
       puts '0 - выход'
       input1 = gets.chomp.to_i
 
@@ -20,6 +21,9 @@ module MainMenu
       when 3 then show_train_menu
 # Операции с вагонами (создать, добавить к поезду, отцепить)"
       when 4 then show_wagon_menu
+# Операции с билетами и грузами"
+      when 5 then show_ticket_menu
+# Выход
       when 0 then break
       end
     end
@@ -47,5 +51,11 @@ module MainMenu
     wagon_menu = WagonMenu.new
     input2 = gets.chomp.to_i
     wagon_menu.do_from_menu(input2)
+  end
+
+  def show_ticket_menu
+    ticket_menu = TicketMenu.new
+    input2 = gets.chomp.to_i
+    ticket_menu.do_from_menu(input2)
   end
 end

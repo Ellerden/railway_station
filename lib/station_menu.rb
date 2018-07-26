@@ -42,22 +42,20 @@ class StationMenu
   def show_trains_on_station
     puts 'Введите название станции, чтобы посмотреть список поездов'
     name = gets.chomp
-    puts 'Поезда какого типа показать? 1 - пасс, 2 - груз, 3 - все'
-    type = gets.chomp.to_i
-    case type
-    when 1 then type = :pass
-    when 2 then type = :cargo
-    when 3 then type = :all
-    else
-      puts 'Такой тип поездов пока нам неизвестен'
-    end
-
     selected_station = Station.find_station_by_name(name)
-    puts selected_station.trains_by_type(type) unless selected_station.nil?
+    unless selected_station.nil? || selected_station.trains.nil?
+
+      selected_station.show_all_trains do |train|
+        puts "Поезд #{train.num}, тип: #{train.type}, кол-во вагонов: "\
+        "#{train.wagons.size}"
+      end
+    end
   end
 
   def show_all_stations
     puts 'Список всех существующих ж/д станций:'
     puts Station.all
   end
+
+
 end

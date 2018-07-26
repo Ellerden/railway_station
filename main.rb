@@ -11,6 +11,7 @@ require_relative 'lib/station_menu'
 require_relative 'lib/route_menu'
 require_relative 'lib/train_menu'
 require_relative 'lib/wagon_menu'
+require_relative 'lib/ticket_menu'
 include MainMenu
 
 puts 'Добро пожаловать на железную дорогу. Что вы хотите сделать?'
