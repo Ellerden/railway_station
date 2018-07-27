@@ -18,9 +18,8 @@ class PassengerWagon < Wagon
 
   # "занимает места" в вагоне (по одному за раз)
   def take_place
-    unless @places.zero?
+    unless @taken_places == @places
       @taken_places += 1
-      @places -= 1
     end
   end
 end

@@ -32,9 +32,10 @@ class TicketMenu
       selected_train.show_wagons_info
       puts 'Выберите вагон, в котором вы хотите поехать. Введите номер'
       num = gets.chomp.to_i
-      selected_train.wagons[num - 1].take_place
+      wagon = selected_train.wagons[num - 1]
+      wagon.take_place
       puts "Место успешно забронировано! Осталось свободных мест: "\
-      "#{selected_train.wagons[num - 1].places}"
+      "#{wagon.places - wagon.taken_places}"
     end
   end
 
@@ -48,9 +49,10 @@ class TicketMenu
       num = gets.chomp.to_i
       puts 'Введите объем груза'
       space = gets.chomp.to_i
-      selected_train.wagons[num - 1].occupy_space
+      wagon = selected_train.wagons[num - 1]
+      wagon.occupy_space
       puts "Груз успешно добавлен! Осталось свободного объема: "\
-      "#{selected_train.wagons[num - 1].capacity}"
+      "#{wagon.capacity - wagon.taken_space} м^3"
     end
   end
 end

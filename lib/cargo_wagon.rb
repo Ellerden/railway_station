@@ -17,9 +17,8 @@ class CargoWagon < Wagon
   end
 
   def occupy_space(space)
-    unless space > @capacity
+    unless space + @taken_space > @capacity
       @taken_space += space
-      @capacity -= space
     end
   end
 end
