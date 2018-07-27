@@ -44,7 +44,7 @@ class Station
     @@stations[name]
   end
 
-  def show_all_trains(&block)
+  def each_train(&block)
     @trains.each { |train| block.call(train) }
   end
 

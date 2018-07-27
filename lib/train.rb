@@ -42,8 +42,8 @@ class Train
   #метод, который принимает блок и проходит по всем вагонам поезда
   #(вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
 
-  def show_all_wagons(&block)
-    @wagons.each { |wagon| block.call(wagon, @wagons.index(wagon) + 1) }
+  def each_wagon(&block)
+    @wagons.each { |wagon| block.call(wagon, @wagons.index(wagon)) }
   end
 
   # отцепляет вагоны (по одному вагону за операцию, если поезд стоит).

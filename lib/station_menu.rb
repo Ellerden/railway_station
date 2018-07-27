@@ -43,9 +43,9 @@ class StationMenu
     puts 'Введите название станции, чтобы посмотреть список поездов'
     name = gets.chomp
     selected_station = Station.find_station_by_name(name)
-    unless selected_station.nil? || selected_station.trains.nil?
+    if selected_station && selected_station.trains
 
-      selected_station.show_all_trains do |train|
+      selected_station.each_train do |train|
         puts "Поезд #{train.num}, тип: #{train.type}, кол-во вагонов: "\
         "#{train.wagons.size}"
       end
