@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 require_relative 'train'
 require_relative 'main_menu'
 require_relative 'manufacturer'
@@ -11,19 +9,17 @@ class Wagon
   private_class_method :new
   @@all_wagons = []
 
-  def initialize(manufacturer, *args)
+  def initialize(manufacturer, *_args)
     self.company_name = manufacturer
     validate!
   end
 
   def valid?
-    begin
-      validate!
-      result = true
-    rescue RuntimeError => e
-      puts "Что-то пошло не так. Ошибка: #{e.inspect}"
-      result = false
-    end
+    validate!
+    true
+  rescue RuntimeError => e
+    puts "Что-то пошло не так. Ошибка: #{e.inspect}"
+    false
   end
 
   protected

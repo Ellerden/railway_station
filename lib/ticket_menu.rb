@@ -1,10 +1,9 @@
-# encoding: UTF-8
 require_relative 'train'
 require_relative 'main_menu'
 require_relative 'wagon'
 
 class TicketMenu
- # include WagonInfo
+  # include WagonInfo
 
   def initialize
     puts 'Выберите операцию: 1 - купить билет на поезд, 2 - отправить груз. '\
@@ -18,12 +17,14 @@ class TicketMenu
       # отправить груз в грузовом вагоне
     when 2 then ship_package
       # назад в главное меню
-    when 0 then return
+    when 0 then nil
     end
   end
-# к этим методам есть доступ только через do_from_menu,
-# используются внутри клаccа
+  # к этим методам есть доступ только через do_from_menu,
+  # используются внутри клаccа
+
   private
+
   def buy_ticket
     puts 'Введите номер поезда, в котором вы хотите купить билет. '
     name = gets.chomp
@@ -34,7 +35,7 @@ class TicketMenu
       num = gets.chomp.to_i
       wagon = selected_train.wagons[num - 1]
       wagon.take_place
-      puts "Место успешно забронировано! Осталось свободных мест: "\
+      puts 'Место успешно забронировано! Осталось свободных мест: '\
       "#{wagon.places - wagon.taken_places}"
     end
   end
@@ -50,10 +51,9 @@ class TicketMenu
       puts 'Введите объем груза'
       space = gets.chomp.to_i
       wagon = selected_train.wagons[num - 1]
-      wagon.occupy_space
-      puts "Груз успешно добавлен! Осталось свободного объема: "\
+      wagon.occupy_space(space)
+      puts 'Груз успешно добавлен! Осталось свободного объема: '\
       "#{wagon.capacity - wagon.taken_space} м^3"
     end
   end
 end
-

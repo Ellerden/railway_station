@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require_relative 'train'
 require_relative 'main_menu'
 require_relative 'instance_counter'
@@ -19,15 +18,13 @@ class Station
   # список всех поездов на станции, находящиеся в текущий момент
   # список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
   def trains_by_type(type = :all)
-    sel_trains = @trains.select { |train| train.type == type || type == :all } \
-      .map { |train| "Поезд: #{train.num}, тип: #{train.type}" }
+    @trains.select { |train| train.type == type || type == :all } \
+           .map { |train| "Поезд: #{train.num}, тип: #{train.type}" }
   end
 
   # принимает поезда (по одному за раз)
   def arrival(train)
-    unless trains.include? train
-      trains << train
-    end
+    trains << train unless trains.include? train
   end
 
   # отправляет поезда (по одному за раз. поезд удаляется из списка поездов)
@@ -44,18 +41,16 @@ class Station
     @@stations[name]
   end
 
-  def each_train(&block)
-    @trains.each { |train| block.call(train) }
+  def each_train
+    @trains.each { |train| yield(train) }
   end
 
   def valid?
-    begin
-      validate!
-      true
-    rescue RuntimeError => e
-      puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
-      false
-    end
+    validate!
+    true
+  rescue RuntimeError => e
+    puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
+    false
   end
 
   protected

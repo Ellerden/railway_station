@@ -1,10 +1,8 @@
-# encoding: UTF-8
-
 require_relative 'wagon'
 # Создание и управление пассажирскими вагонами
 class PassengerWagon < Wagon
   # возвращает количество занятых мест в вагоне - переменная taken_places
-  # возвращает количество свободных мест в вагоне - переменная places
+  # возвращает количество мест в вагоне - переменная places
   attr_reader :places, :taken_places
   public_class_method :new
 
@@ -18,8 +16,6 @@ class PassengerWagon < Wagon
 
   # "занимает места" в вагоне (по одному за раз)
   def take_place
-    unless @taken_places == @places
-      @taken_places += 1
-    end
+    @taken_places += 1 unless @taken_places == @places
   end
 end

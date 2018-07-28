@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # информация о компании-производителе
 module Manufacturer
   protected

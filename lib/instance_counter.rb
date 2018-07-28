@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 # модуль подсчета созданных объектов класса
 module InstanceCounter
   def self.included(base)
@@ -19,7 +17,6 @@ module InstanceCounter
   module InstanceMethods
     protected
 
-   # attr_accessor :count
     # увеличивает счетчик кол-ва экземпляров класса
     def register_instance
       self.class.count ||= 0

@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 require_relative 'station'
 require_relative 'main_menu'
 require_relative 'route'
@@ -21,54 +19,50 @@ class RouteMenu
       # 4 - посмотреть список всех станций,
     when 4 then last_route_info
       # назад к главному меню
-    when 0 then return
+    when 0 then nil
     end
   end
 
-# к этим методам есть доступ только через do_from_menu,
-# используются внутри клаccа
+  # к этим методам есть доступ только через do_from_menu,
+  # используются внутри клаccа
   private
 
   def create_route
-    begin
-      puts 'Введите начальную станцию (станция должна быть создана)'
-      start = gets.chomp
-      puts 'Введите конечную станцию (станция должна быть создана)'
+    puts 'Введите начальную станцию (станция должна быть создана)'
+    start = gets.chomp
+    puts 'Введите конечную станцию (станция должна быть создана)'
 
-      finish = gets.chomp
-      new_route = Route.new(start, finish)
-    rescue
-      puts "Вагон #{wagon.company_name} типа #{wagon.type} создан!" if wagon.valid?
-    else
-
-    end
+    finish = gets.chomp
+    Route.new(start, finish)
+  rescue StandardError
+    puts "Вагон #{wagon.company_name} типа #{wagon.type} создан" if wagon.valid?
+  else
   end
 
   def add_station_to_route
     puts 'Введите название станции, которую хотите добавить. Станция (должна '\
     'быть создана до этого) будет добавлена в последний созданный маршрут.'
     name = gets.chomp
-    unless Route.empty?
-      last_route = Route.last
-      last_route.add_station(additional_station)
-    end
+    additional_station = Station.find_station_by_name(name)
+    return if Route.empty?
+    last_route = Route.last
+    last_route.add_station(additional_station)
   end
 
   def delete_station_from_route
     puts 'Введите название станции, которую хотите удалить. Станция (должна '\
     'быть создана до этого) будет удалена из последнего созданного маршрута'
     name = gets.chomp
-    unless Route.empty?
-      last_route = Route.last
-      last_route.delete_station(odd_station)
-    end
+    odd_station = Station.find_station_by_name(name)
+    return if Route.empty?
+    last_route = Route.last
+    last_route.delete_station(odd_station)
   end
 
   def last_route_info
     puts 'Информация о последнем добавленном маршруте:'
-    unless Route.empty?
-      last_route = Route.last
-      puts last_route.all_stations
-    end
+    return if Route.empty?
+    last_route = Route.last
+    puts last_route.all_stations
   end
 end

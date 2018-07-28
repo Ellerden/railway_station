@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require_relative 'route'
 require_relative 'station'
 require_relative 'passenger_wagon'
@@ -30,30 +29,30 @@ class TrainMenu
     # управлять вагонами
     when 5 then manage_wagons
     # назад к главному меню
-    when 0 then return
+    when 0 then nil
     end
   end
 
-# к этим методам есть доступ только через do_from_menu,
-# используются внутри клаccа
+  # к этим методам есть доступ только через do_from_menu,
+  # используются внутри клаccа
+
   private
+
   def create_train
-    begin
-      puts 'Выберите тип поезда, который вы хотите создать: 1 - пасс, 2 - груз.'
-      type = gets.chomp.to_i
-      puts 'Введите название поезда, который вы хотите создать'
-      name = gets.chomp
-      case type
-      when 1 then train = PassengerTrain.new(name)
-      when 2 then train = CargoTrain.new(name)
-      else
-        raise 'Неверно задан тип поезда. Повторите ввод'
-      end
-      puts "Поезд #{train.num} типа #{train.type} создан!" if train.valid?
-    rescue RuntimeError => e
-      puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
-      retry
+    puts 'Выберите тип поезда, который вы хотите создать: 1 - пасс, 2 - груз.'
+    type = gets.chomp.to_i
+    puts 'Введите название поезда, который вы хотите создать'
+    name = gets.chomp
+    case type
+    when 1 then train = PassengerTrain.new(name)
+    when 2 then train = CargoTrain.new(name)
+    else
+      raise 'Неверно задан тип поезда. Повторите ввод'
     end
+    puts "Поезд #{train.num} типа #{train.type} создан!" if train.valid?
+  rescue RuntimeError => e
+    puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
+    retry
   end
 
   def choose_route

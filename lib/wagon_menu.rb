@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require_relative 'train'
 require_relative 'main_menu'
 require_relative 'wagon'
@@ -18,35 +17,35 @@ class WagonMenu
       # отцепить вагон от поезда
     when 3 then detach_wagon_from_train
       # возвращаемся в главное меню ж/д станции
-    when 0 then return
+    when 0 then nil
     end
   end
-# к этим методам есть доступ только через do_from_menu,
-# используются внутри клаccа
+  # к этим методам есть доступ только через do_from_menu,
+  # используются внутри клаccа
+
   private
+
   def create_wagon
-    begin
-      puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
-      type = gets.chomp.to_i
-      puts 'Введите название фирмы-производителя вагонов'
-      name = gets.chomp
-      case type
-      when 1
-        puts 'Введите количество мест в вагоне'
-        places = gets.chomp.to_i
-        wagon = PassengerWagon.new(name, places)
-      when 2
-        puts 'Введите общий объем вагона (м^3)'
-        capacity = gets.chomp.to_i
-        wagon = CargoWagon.new(name, capacity)
-      else
-        raise 'Неверно задан тип вагона. Повторите ввод.'
-      end
-      puts "Вагон #{wagon.company_name} типа #{wagon.type} создан!" if wagon.valid?
-    rescue RuntimeError => e
-      puts "Что-то пошло не так. Ошибка: #{e.inspect}"
-      retry
+    puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
+    type = gets.chomp.to_i
+    puts 'Введите название фирмы-производителя вагонов'
+    name = gets.chomp
+    case type
+    when 1
+      puts 'Введите количество мест в вагоне'
+      places = gets.chomp.to_i
+      wagon = PassengerWagon.new(name, places)
+    when 2
+      puts 'Введите общий объем вагона (м^3)'
+      capacity = gets.chomp.to_i
+      wagon = CargoWagon.new(name, capacity)
+    else
+      raise 'Неверно задан тип вагона. Повторите ввод.'
     end
+    puts "Вагон #{wagon.company_name} типа #{wagon.type} создан!" if wagon.valid?
+  rescue RuntimeError => e
+    puts "Что-то пошло не так. Ошибка: #{e.inspect}"
+    retry
   end
 
   def attach_wagon_to_train

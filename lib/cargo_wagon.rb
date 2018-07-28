@@ -1,10 +1,8 @@
-# encoding: UTF-8
-
 require_relative 'wagon'
 # # Создание и управление грузовыми вагонами
 class CargoWagon < Wagon
   # возвращает занятый объем - переменная @taken_space
-  # возвращает оставшийся (доступный) объем  - @capacity
+  # возвращает объем  - @capacity
   attr_reader :capacity, :taken_space
   public_class_method :new
 
@@ -17,8 +15,6 @@ class CargoWagon < Wagon
   end
 
   def occupy_space(space)
-    unless space + @taken_space > @capacity
-      @taken_space += space
-    end
+    @taken_space += space unless space + @taken_space > @capacity
   end
 end

@@ -1,9 +1,7 @@
-# encoding: UTF-8
-
 # информация о вагонах поезда
 module WagonsInfo
   def show_wagons_info
-    self.each_wagon do |wagon, i|
+    each_wagon do |wagon, i|
       if wagon.type == :pass
         puts "Вагон № #{i + 1}, тип: #{wagon.type}, всего мест: "\
         "#{wagon.places}, занято: #{wagon.taken_places}"

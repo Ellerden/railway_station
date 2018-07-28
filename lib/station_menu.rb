@@ -1,5 +1,3 @@
-# encoding: UTF-8
-
 require_relative 'train'
 require_relative 'main_menu'
 require_relative 'station'
@@ -19,7 +17,7 @@ class StationMenu
       # показать все существующие станции
     when 3 then show_all_stations
       # возврат в главное меню
-    when 0 then return
+    when 0 then nil
     end
   end
   # к этим методам есть доступ только через do_from_menu,
@@ -28,15 +26,13 @@ class StationMenu
   private
 
   def create_station
-    begin
-      puts 'Введите название станции, которую вы хотите создать'
-      name = gets.chomp
-      station = Station.new(name)
-      puts "Станция #{station.name} создана" if station.valid?
-    rescue RuntimeError => e
-      puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
-      retry
-    end
+    puts 'Введите название станции, которую вы хотите создать'
+    name = gets.chomp
+    station = Station.new(name)
+    puts "Станция #{station.name} создана" if station.valid?
+  rescue RuntimeError => e
+    puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
+    retry
   end
 
   def show_trains_on_station
@@ -56,6 +52,4 @@ class StationMenu
     puts 'Список всех существующих ж/д станций:'
     puts Station.all
   end
-
-
 end

@@ -1,9 +1,7 @@
-# encoding: UTF-8
-
 require_relative 'station'
 require_relative 'main_menu'
 require_relative 'instance_counter'
-  # создание и управление маршрутами
+# создание и управление маршрутами
 class Route
   include InstanceCounter
   attr_reader :starting_station, :terminal_station, :full_path
@@ -20,33 +18,31 @@ class Route
     register_instance
   end
 
-# добавлять промежуточную станцию в список (на предпоследнее место)
+  # добавлять промежуточную станцию в список (на предпоследнее место)
   def add_station(station)
-    unless station_valid?(station) && @full_path.include?(station)
-      @full_path.insert(-2, station)
-    end
+    return if station_valid?(station) && @full_path.include?(station)
+    @full_path.insert(-2, station)
   end
 
-# удаляет промежуточную станцию из списка
+  # удаляет промежуточную станцию из списка
   def delete_station(station)
-    # проверяем, является ли станция промежуточной и вообще станцией. если да - удаляем
-    unless station_valid?(station) && (station == @starting_station ||
+    # проверяем, является ли станция промежуточной и вообще станцией. если да -
+    # удаляем
+    return if station_valid?(station) && (station == @starting_station ||
       station == @terminal_station)
-      @full_path.delete(station)
-    end
+    @full_path.delete(station)
   end
 
-# выводит список всех станций по-порядку от начальной до конечной
+  # выводит список всех станций по-порядку от начальной до конечной
   def all_stations
     names = []
     @full_path.each { |station| names << station.name }
     names
   end
 
-# показывает все созданные маршруты
+  # показывает все созданные маршруты
   def self.all
-    all_routes = @@routes.map \
-    .with_index { |route, i| "#{i + 1}: #{route.all_stations}" }
+    @@routes.map.with_index { |route, i| "#{i + 1}: #{route.all_stations}" }
   end
 
   def self.by_index(index)
@@ -54,13 +50,11 @@ class Route
   end
 
   def valid?
-    begin
-      validate!
-      result = true
-    rescue RuntimeError => e
-      puts 'Что-то пошло не так. Ошибка: #{e.inspect} '
-      result = false
-    end
+    validate!
+    true
+  rescue RuntimeError => e
+    puts "Что-то пошло не так. Ошибка: #{e.inspect}"
+    false
   end
 
   protected
@@ -78,7 +72,6 @@ class Route
     return false if Station.find_station_by_name(station.name).nil?
     true
   end
-
 
   # показывает последний созданный маршрут. нужно для добавления/удаления станции
   # из маршрута через меню (class RouteMenu). юзеру не нужен этот метод
