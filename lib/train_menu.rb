@@ -10,27 +10,22 @@ require_relative 'train'
 class TrainMenu
   include WagonsInfo
 
+  OPTIONS = ['Выберите операцию: 1 - создать поезд, '\
+             '2 - выбрать маршрут поезда, 3 - вперед по маршруту, '\
+             '4 - назад по маршруту, 5 - информация о вагонах. 0 - назад'].freeze
+
+  MENU_METHODS = { 1 => :create_train,
+                   2 => :choose_route,
+                   3 => :forward_on_route,
+                   4 => :backward_on_route,
+                   5 => :manage_wagons }.freeze
+
   def initialize
-    puts 'Выберите операцию: 1 - создать поезд, 2 - выбрать маршрут поезда, '\
-    '3 - вперед по маршруту, 4 - назад по маршруту, 5 - информация о вагонах. '\
-    '0 - назад'
+    puts OPTIONS
   end
 
   def do_from_menu(choice)
-    case choice
-    # создать поезд
-    when 1 then create_train
-    # выбрать маршрут
-    when 2 then choose_route
-    # вперед по маршруту
-    when 3 then forward_on_route
-    # назад по маршруту
-    when 4 then backward_on_route
-    # управлять вагонами
-    when 5 then manage_wagons
-    # назад к главному меню
-    when 0 then nil
-    end
+    send MENU_METHODS[choice] || return
   end
 
   # к этим методам есть доступ только через do_from_menu,
@@ -38,6 +33,7 @@ class TrainMenu
 
   private
 
+  # создать поезд
   def create_train
     puts 'Выберите тип поезда, который вы хотите создать: 1 - пасс, 2 - груз.'
     type = gets.chomp.to_i
@@ -55,6 +51,7 @@ class TrainMenu
     retry
   end
 
+  # выбрать маршрут
   def choose_route
     puts 'Какой поезд вы хотите поставить на маршрут? Введите название'
     name = gets.chomp
@@ -72,6 +69,7 @@ class TrainMenu
     end
   end
 
+  # вперед по маршруту
   def forward_on_route
     puts 'Какой поезд вы хотите продвинуть вперед? Введите название'
     name = gets.chomp
@@ -83,6 +81,7 @@ class TrainMenu
     end
   end
 
+  # назад по маршруту
   def backward_on_route
     puts 'Какой поезд вы хотите отправить назад? Введите название'
     name = gets.chomp
@@ -95,6 +94,7 @@ class TrainMenu
     end
   end
 
+  # управлять вагонами
   def manage_wagons
     puts 'Информацию о вагонах какого поезда вы хотите увидеть? Введите название'
     name = gets.chomp

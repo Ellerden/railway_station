@@ -34,9 +34,13 @@ class Wagon
     false
   end
 
-  # показывает последний созданный вагон. нужно для добавления вагонов к поезду
-  # через меню (class WagonMenu). юзеру не нужен этот метод
-  def self.last
-    @@all_wagons.last
+  class << self
+    protected
+
+    # показывает последний созданный вагон. это для добавления вагонов к поезду
+    # через меню (class WagonMenu). юзеру не нужен этот метод
+    def last
+      @@all_wagons.last
+    end
   end
 end

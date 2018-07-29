@@ -60,11 +60,10 @@ class Route
   protected
 
   def validate!
-    unless station_valid?(@starting_station)
-      raise 'Неверно задана начальная станция. Проверьте список станций'
-    end
-    unless station_valid?(@terminal_station)
-      raise 'Неверно задана конечная станция. Проверьте список станций'
+    unless station_valid?(@starting_station) &&
+           station_valid?(@terminal_station)
+      raise 'Неверно задана начальная или конечная станция. '\
+      'Проверьте список станций'
     end
   end
 
@@ -73,15 +72,19 @@ class Route
     true
   end
 
-  # показывает последний созданный маршрут. нужно для добавления/удаления станции
-  # из маршрута через меню (class RouteMenu). юзеру не нужен этот метод
-  def self.last
-    @@routes.last
-  end
+  class << self
+    protected
 
-  # нужно чтобы знать RouteMenu есть ли какие маршруты показывать или нет
-  # конечному пользователю не нужно
-  def self.empty?
-    @@routes.empty?
+    # показывает последний созданный маршрут. нужно для добавления/удаления
+    # станции из маршрута через меню (class RouteMenu).
+    def last
+      @@routes.last
+    end
+
+    # нужно чтобы знать RouteMenu есть ли какие маршруты показывать или нет
+    # конечному пользователю не нужно
+    def empty?
+      @@routes.empty?
+    end
   end
 end

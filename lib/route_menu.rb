@@ -3,30 +3,27 @@ require_relative 'main_menu'
 require_relative 'route'
 # Интерфейс меню для управления маршрутами
 class RouteMenu
+  OPTIONS = ['Выберите операцию: 1 - создать маршрут, 2 - добавить станцию, '\
+              '3 - удалить станцию, 4 - посмотреть список всех станций, '\
+              '0 - назад'].freeze
+  MENU_METHODS = { 1 => :create_route,
+                   2 => :add_station_to_route,
+                   3 => :delete_station_from_route,
+                   4 => :last_route_info }.freeze
   def initialize
-    puts 'Выберите операцию: 1 - создать маршрут, 2 - добавить станцию, '\
-    '3 - удалить станцию, 4 - посмотреть список всех станций, 0 - назад'
+    puts OPTIONS
   end
 
   def do_from_menu(choice)
-    case choice
-      # 1 - создать маршрут
-    when 1 then create_route
-      # 2 - добавить станцию
-    when 2 then add_station_to_route
-      # 3 - удалить станцию
-    when 3 then delete_station_from_route
-      # 4 - посмотреть список всех станций,
-    when 4 then last_route_info
-      # назад к главному меню
-    when 0 then nil
-    end
+    send MENU_METHODS[choice] || return
   end
 
   # к этим методам есть доступ только через do_from_menu,
   # используются внутри клаccа
+
   private
 
+  # 1 - создать маршрут
   def create_route
     puts 'Введите начальную станцию (станция должна быть создана)'
     start = gets.chomp
@@ -39,6 +36,7 @@ class RouteMenu
   else
   end
 
+  # 2 - добавить станцию
   def add_station_to_route
     puts 'Введите название станции, которую хотите добавить. Станция (должна '\
     'быть создана до этого) будет добавлена в последний созданный маршрут.'
@@ -49,6 +47,7 @@ class RouteMenu
     last_route.add_station(additional_station)
   end
 
+  # 3 - удалить станцию
   def delete_station_from_route
     puts 'Введите название станции, которую хотите удалить. Станция (должна '\
     'быть создана до этого) будет удалена из последнего созданного маршрута'
@@ -59,6 +58,7 @@ class RouteMenu
     last_route.delete_station(odd_station)
   end
 
+  # 4 - посмотреть список всех станций
   def last_route_info
     puts 'Информация о последнем добавленном маршруте:'
     return if Route.empty?
