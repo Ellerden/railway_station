@@ -7,23 +7,28 @@ require_relative 'main_menu'
 require_relative 'manufacturer'
 require_relative 'instance_counter'
 require_relative 'wagons_info'
+require_relative 'validation'
+require_relative 'accessors'
 
 # создание и упраление поездов
 class Train
   include Manufacturer
   include InstanceCounter
   include WagonsInfo
+  include Validation
+  extend Accessors
   # можно создать только объекты субкласса PassengerTrain или CargoTrain
   private_class_method :new
   attr_reader :speed, :num, :wagons, :type, :current_stop
   @@trains = {}
+
+  validate :type, :between_two_types, 'PassengerTrain || CargoTrain'
 
   def initialize(num, train_manufacturer = nil)
     @num = num
     @speed = 0
     @wagons = []
     self.company_name = train_manufacturer
-    validate!
     register_instance
   end
 
@@ -38,16 +43,13 @@ class Train
   end
 
   # метод, который принимает блок и проходит по всем вагонам поезда
-  # (вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
-
   def each_wagon
     @wagons.each { |wagon| yield(wagon, @wagons.index(wagon)) }
   end
 
-  # отцепляет вагоны (по одному вагону за операцию, если поезд стоит).
-  # отцепляет последний вагон
+  # отцепляет последний вагон (по одному вагону за операцию, если поезд стоит).
   def detach_wagon
-    @wagons.pop if @wagons.!empty? && @speed.zero?
+    @wagons.pop if @speed.zero?
   end
 
   # прицепляет вагоны (по одному вагону за операцию, если поезд стоит).
@@ -55,16 +57,20 @@ class Train
   def attach_wagon(wagon)
     # простой include не работает, потому что подкласс добавляет свои метки
     @wagons.each do |attached_wagon|
-      return if wagon == attached_wagon
+      break if wagon.object_id == attached_wagon.object_id
     end
-    @wagons << wagon if @speed.zero? && wagon.type == type
-    # валидируем вагоны - вдруг это не вагоны
+    if @speed.zero? && (@type == PassengerTrain && wagon.is_a?(PassengerWagon) ||
+      @type == CargoTrain && wagon.is_a?(CargoWagon))
+      @wagons << wagon
+    end
   end
 
   # принимает маршрут следования. При назначении маршрута поезду,
   # поезд автоматически помещается на первую станцию в маршруте.
   def begin_route(route)
+    return unless route.is_a? Route
     @route = route
+    # validate :route, :type, Route
     # валидируем маршрут - вдруг это не маршрут
     route.starting_station.arrival(self)
     @current_stop = route.starting_station
@@ -84,17 +90,18 @@ class Train
     @current_stop = last_station
   end
 
-  # следующая остановка, остальные вызываются без метода – last_stop, current_stop
   def next_stop
-    # если маршрутов нет, поезд еще не вышел на маршрут или стоит на последней станции
-    unless @route == '' || @current_stop.nil? || @current_stop == @route.terminal_station
+    # если маршрутов нет, поезд еще не вышел на маршрут или стоит на конечной
+    unless @route == '' || @current_stop.nil? ||
+           @current_stop == @route.terminal_station
       next_after(@current_stop)
     end
   end
 
   def last_stop
     # если маршрутов нет, поезд еще не вышел на маршрут или стоит на 1-й станции
-    unless @route == '' || @current_stop.nil? || @current_stop == @route.starting_station
+    unless @route == '' || @current_stop.nil? ||
+           @current_stop == @route.starting_station
       last_before(@current_stop)
     end
   end
@@ -104,50 +111,9 @@ class Train
     @@trains[name]
   end
 
-  # переменная используется только в самом классе и подклассах. человек не знает
-  # всего маршрута - только текущую, предыдущую и следующую станции
-
-  def valid?
-    validate!
-    true
-  rescue RuntimeError => e
-    puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
-    false
-  end
-
   protected
 
-  attr_reader :route
-
-  # методы используются только в классе, нужны для вычисления след/пред станции/
-  # и (косвенно) продвижения по маршруту вперед/назад. юзеру сами методы не нужны
-
-  def validate!
-    # regexp формат: 3 буквы или цифры в любом порядке, необязательный дефис
-    # и еще 2 буквы или цифры после дефиса
-    if @num.match(/^[[:alpha:]\d]{3}-?[[:alpha:]\d]{2}$/i).nil?
-      raise 'Неверно задан № поезда. Формат: 3 буквы/цифры(-)2 буквы/цифры'
-    end
-    raise 'К поезду прикреплены вагоны неверного типа' unless wagons_valid?
-    raise 'Маршрут задан неверно' unless route_valid?
-    raise 'Неверно задан тип поезда. Нужно - пасс/груз' unless type_valid?
-  end
-
-  def wagons_valid?
-    selected_wagons = @wagons.select { |wagon| wagon.type == :pass }
-    return true if selected_wagons.size == @wagons.size
-    false
-  end
-
-  def route_valid?
-    return true unless @route
-    @route.is_a?(Route)
-  end
-
-  def type_valid?
-    return true if @type == :pass || @type == :cargo
-    false
-  end
+  strong_attr_accessor :route, Route
 
   private
 

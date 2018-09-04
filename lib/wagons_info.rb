@@ -2,7 +2,7 @@
 module WagonsInfo
   def show_wagons_info
     each_wagon do |wagon, i|
-      if wagon.type == :pass
+      if wagon.is_a? PassengerWagon
         puts "Вагон № #{i + 1}, тип: #{wagon.type}, всего мест: "\
         "#{wagon.places}, занято: #{wagon.taken_places}"
       else

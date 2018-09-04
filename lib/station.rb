@@ -1,15 +1,20 @@
 require_relative 'train'
 require_relative 'main_menu'
 require_relative 'instance_counter'
+require_relative 'accessors'
+require_relative 'validation'
 # создание и управление ж/д станцией
 class Station
   include InstanceCounter
-  attr_reader :name
+  extend Accessors
+  include Validation
+  attr_accessor_with_history :name
   @@stations = {}
+
+  validate :name, :presence
 
   def initialize(name)
     @name = name
-    validate!
     @trains = []
     @@stations[name] = self
     register_instance
@@ -43,20 +48,6 @@ class Station
 
   def each_train
     @trains.each { |train| yield(train) }
-  end
-
-  def valid?
-    validate!
-    true
-  rescue RuntimeError => e
-    puts "Что-то пошло не так, повторите ввод. Ошибка: #{e.inspect}"
-    false
-  end
-
-  protected
-
-  def validate!
-    raise 'Неверное имя станции – короче 1 символа' if @name.size < 2
   end
 
   # переменная trains - используется только в методах класса,

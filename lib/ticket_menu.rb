@@ -26,7 +26,7 @@ class TicketMenu
     name = gets.chomp
     selected_train = Train.find(name)
     return unless selected_train && selected_train.wagons &&
-                  selected_train.type == :pass
+                  selected_train.is_a?(PassengerTrain)
     choose_wagon(selected_train, :pass)
     puts "Забронировано! Осталось мест: #{wagon.places - wagon.taken_places}"
   end
@@ -52,7 +52,7 @@ class TicketMenu
     name = gets.chomp
     selected_train = Train.find(name)
     return unless selected_train && selected_train.wagons &&
-                  selected_train.type == :cargo
+                  selected_train.is_a?(CargoTrain)
 
     puts 'Введите объем груза'
     space = gets.chomp.to_i

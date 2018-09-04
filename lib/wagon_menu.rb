@@ -9,9 +9,7 @@ class WagonMenu
              '0 - назад'].freeze
   MENU_METHODS = { 1 => :create_wagon,
                    2 => :attach_wagon_to_train,
-                   3 => :delete_station_from_route,
-                   4 => :detach_wagon_from_train }.freeze
-  WAGON = { 1 => :create_pass_wagon, 2 => :create_cardo_wagon }.freeze
+                   3 => :detach_wagon_from_train }.freeze
   def initialize
     puts OPTIONS
   end
@@ -27,9 +25,14 @@ class WagonMenu
   def create_wagon
     puts 'Выберите тип вагона, который вы хотите создать: 1 - пасс, 2 - груз'
     type = gets.chomp.to_i
-    send WAGON[type] || raise
-  rescue RuntimeError
-    puts 'Что-то пошло не так. Неверный тип вагонов'
+    case type
+    when 1 then create_pass_wagon
+    when 2 then create_cargo_wagon
+    else
+      raise 'Неверно задан тип вагона. Повторите ввод'
+    end
+  rescue RuntimeError => e
+    puts "Что-то пошло не так. Неверный тип вагонов. Ошибка: #{e.inspect}"
     retry
   end
 
@@ -42,9 +45,9 @@ class WagonMenu
     puts "Вагон типа #{wagon.type} создан и ждет пассажиров" if wagon.valid?
   end
 
-  def create_cardo_wagon
-    name = puts 'Введите название фирмы-производителя вагонов'
-    gets.chomp
+  def create_cargo_wagon
+    puts 'Введите название фирмы-производителя вагонов'
+    name = gets.chomp
     puts 'Введите общий объем вагона (м^3)'
     capacity = gets.chomp.to_i
     wagon = CargoWagon.new(name, capacity)
@@ -57,7 +60,7 @@ class WagonMenu
     name = gets.chomp
     selected_train = Train.find(name)
     last_wagon = Wagon.last
-    return unless selected_train && selected_train.type == last_wagon.type
+    return unless selected_train
     selected_train.attach_wagon(last_wagon)
     puts 'Вагон прицеплен'
   end
@@ -67,6 +70,7 @@ class WagonMenu
     'Будет отцеплен последний вагон в поезде'
     name = gets.chomp
     selected_train = Train.find(name)
+    puts "selected_train.wagons #{selected_train.wagons}"
     return unless selected_train && selected_train.wagons
     selected_train.detach_wagon
     puts 'Вагон отцеплен'

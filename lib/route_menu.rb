@@ -27,13 +27,14 @@ class RouteMenu
   def create_route
     puts 'Введите начальную станцию (станция должна быть создана)'
     start = gets.chomp
+    start = Station.find_station_by_name(start)
     puts 'Введите конечную станцию (станция должна быть создана)'
-
     finish = gets.chomp
-    Route.new(start, finish)
-  rescue StandardError
-    puts "Вагон #{wagon.company_name} типа #{wagon.type} создан" if wagon.valid?
-  else
+    finish = Station.find_station_by_name(finish)
+    route = Route.new(start, finish)
+    puts 'Новый маршрут создан!' if route.valid?
+  rescue RuntimeError => e
+    puts "Невозможно создать маршрут. Ошибка: #{e.inspect}"
   end
 
   # 2 - добавить станцию

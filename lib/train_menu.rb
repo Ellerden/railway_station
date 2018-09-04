@@ -12,7 +12,8 @@ class TrainMenu
 
   OPTIONS = ['Выберите операцию: 1 - создать поезд, '\
              '2 - выбрать маршрут поезда, 3 - вперед по маршруту, '\
-             '4 - назад по маршруту, 5 - информация о вагонах. 0 - назад'].freeze
+             '4 - назад по маршруту, 5 - информация о вагонах. '\
+             '0 - назад'].freeze
 
   MENU_METHODS = { 1 => :create_train,
                    2 => :choose_route,
@@ -56,13 +57,13 @@ class TrainMenu
     puts 'Какой поезд вы хотите поставить на маршрут? Введите название'
     name = gets.chomp
     selected_train = Train.find(name)
-    unless selected_train.nil? || Route.empty?
-      puts 'Выберите один из маршрутов: '
-      all_routes = Route.all
-      puts all_routes
-      choice = gets.chomp.to_i
-    end
-    unless choice.zero? || choice > size
+    return if selected_train.nil? || Route.empty?
+    puts 'Выберите один из маршрутов: '
+    all_routes = Route.all
+    puts all_routes
+    choice = gets.chomp.to_i
+    puts choice
+    unless choice.zero? || choice > all_routes.size
       selected_route = Route.by_index(choice)
       selected_train.begin_route(selected_route)
       puts "Поезд вышел на маршрут № #{choice}!"
@@ -74,7 +75,8 @@ class TrainMenu
     puts 'Какой поезд вы хотите продвинуть вперед? Введите название'
     name = gets.chomp
     selected_train = Train.find(name)
-    unless selected_train.nil? || selected_train.current_stop.nil?
+    unless selected_train.nil? || selected_train.current_stop.nil? ||
+           selected_train.next_stop.nil?
       puts "Следующая станция — #{selected_train.next_stop.name}"
       selected_train.forward
       puts 'Поезд отправился вперед'
@@ -86,8 +88,8 @@ class TrainMenu
     puts 'Какой поезд вы хотите отправить назад? Введите название'
     name = gets.chomp
     selected_train = Train.find(name)
-
-    unless selected_train.nil? || selected_train.current_stop.nil?
+    unless selected_train.nil? || selected_train.current_stop.nil? ||
+           selected_train.last_stop.nil?
       puts "Предыдущая станция — #{selected_train.last_stop.name}"
       selected_train.backward
       puts 'Поезд отправился назад'
@@ -96,7 +98,7 @@ class TrainMenu
 
   # управлять вагонами
   def manage_wagons
-    puts 'Информацию о вагонах какого поезда вы хотите увидеть? Введите название'
+    puts 'Инфо о вагонах какого поезда вы хотите увидеть? Введите название'
     name = gets.chomp
     selected_train = Train.find(name)
     selected_train.show_wagons_info if selected_train && selected_train.wagons

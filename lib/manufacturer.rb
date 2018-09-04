@@ -1,6 +1,7 @@
+require_relative 'accessors'
+
 # информация о компании-производителе
 module Manufacturer
-  protected
-
-  attr_accessor :company_name
+  extend Accessors
+  attr_accessor_with_history :company_name
 end
