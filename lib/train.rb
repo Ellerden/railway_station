@@ -20,9 +20,10 @@ class Train
   # можно создать только объекты субкласса PassengerTrain или CargoTrain
   private_class_method :new
   attr_reader :speed, :num, :wagons, :type, :current_stop
+  strong_attr_accessor :route, Route
   @@trains = {}
 
-  validate :type, :between_two_types, 'PassengerTrain || CargoTrain'
+  validate :type, :between_many_types, 'PassengerTrain || CargoTrain'
 
   def initialize(num, train_manufacturer = nil)
     @num = num
@@ -110,10 +111,6 @@ class Train
   def self.find(name)
     @@trains[name]
   end
-
-  protected
-
-  strong_attr_accessor :route, Route
 
   private
 

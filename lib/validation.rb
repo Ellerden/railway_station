@@ -5,11 +5,6 @@ module Validation
     base.send :include, InstanceMethods
   end
 
-  def self.included(base)
-    base.extend ClassMethods
-    base.send :include, InstanceMethods
-  end
-
   module ClassMethods
     attr_accessor :validation_choice
 
@@ -61,12 +56,11 @@ module Validation
       raise "Неверный тип #{name}. Должно быть #{type}" unless value.is_a? type
     end
 
-    def validate_between_two_types(name, types)
+    def validate_between_many_types(name, types)
       value = instance_variable_get("@#{name}")
       types = types.split(' || ')
-      unless (value.is_a? Object.const_get(types[0])) || (value.is_a? Object.const_get(types[1]))
-        raise "Неверный тип #{name}. Должно быть #{types[0]} или #{types[1]}"
-      end
+      types.each { |type| return true if value.is_a? Object.const_get(type) }
+      raise "Неверный тип #{name}. Должен быть один из: #{types}"
     end
 
     def validate_each_type(name, type)

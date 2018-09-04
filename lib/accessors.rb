@@ -10,7 +10,7 @@ module Accessors
 
       define_method("#{name}=".to_sym) do |value|
         instance_variable_set(var_name, value)
-        instance_variable_set(var_history, []) if instance_variable_get(var_history).nil?
+        instance_variable_set(var_history, []) unless instance_variable_get(var_history)
         instance_variable_get("@#{name}_history").push(value)
       end
     end

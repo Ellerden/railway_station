@@ -11,7 +11,7 @@ class Wagon
   private_class_method :new
   @@all_wagons = []
 
-  validate :type, :between_two_types, 'PassengerWagon || CargoWagon'
+  validate :type, :between_many_types, 'PassengerWagon || CargoWagon'
 
   def initialize(manufacturer, *_args)
     self.company_name = manufacturer
