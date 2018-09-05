@@ -21,7 +21,7 @@ module Validation
     # какая именно валидация не прошла
     def validate!
       self.class.validation_choice.each do |choice|
-        validation_method = ('validate_' + choice[:type].to_s).to_sym
+        validation_method = "validate_#{choice[:type]}".to_sym
         send(validation_method, choice[:attr], choice[:param])
       end
       true
